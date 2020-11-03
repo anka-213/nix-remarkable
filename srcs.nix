@@ -1,24 +1,24 @@
-release: _nixpkgs:
-
+release:
 let
-  bootPkgs = import _nixpkgs {};
-
-  nixpkgs = if release then bootPkgs.fetchFromGitHub {
-    owner = "NixOS";
-    repo = "nixpkgs";
-    # nixpkgs-unstable 2020-10-31
-    rev = "ebe09a7ccc634bfad03d21e7a5f25923a451d875";
-    sha256 = "16fw8kh4ig3vd6370x7kb6f0ixkcb8mdj3rrj9c0rw774nk8a5lv";
-  } else _nixpkgs;
-in with import nixpkgs {}; let
+  nixpkgs = builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/ebe09a7ccc634bfad03d21e7a5f25923a451d875.tar.gz";
+  # bootPkgs.fetchFromGitHub {
+  #   owner = "NixOS";
+  #   repo = "nixpkgs";
+  #   # nixpkgs-unstable 2020-10-31
+  #   rev = "ebe09a7ccc634bfad03d21e7a5f25923a451d875";
+  #   sha256 = "16fw8kh4ig3vd6370x7kb6f0ixkcb8mdj3rrj9c0rw774nk8a5lv";
+  # };
+in
+with import nixpkgs { };
+let
   upstreamOrLocal = name: ghArgs:
     let path = ./pkgs + ("/" + name) + /derivation.nix; in
     if !release && builtins.pathExists path
     then { drv = path; }
-    else let src = fetchFromGitHub ({ repo = name; } // ghArgs); in
-         src // { drv = src + "/derivation.nix"; };
+    else
+      let src = fetchFromGitHub ({ repo = name; } // ghArgs); in
+      src // { drv = src + "/derivation.nix"; };
 in
-
 {
   inherit nixpkgs;
 

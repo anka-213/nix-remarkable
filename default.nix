@@ -1,10 +1,9 @@
 # if release is not set, import packages from subdirectories if they exist
 { release ? false
-, nixpkgs ? <nixpkgs>
-, srcs ? import ./srcs.nix release nixpkgs
+, srcs ? import ./srcs.nix release
 }:
 
 rec {
-  rmPkgs = import ./rM { inherit srcs hostPkgs nixpkgs; };
+  rmPkgs = import ./rM { inherit srcs hostPkgs; };
   hostPkgs = import ./host { inherit srcs rmPkgs; };
 }
