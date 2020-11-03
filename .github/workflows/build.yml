@@ -13,7 +13,7 @@ jobs:
     - uses: cachix/cachix-action@v6
       with:
         name: nix-remarkable
-        # signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+        # signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}' 
     - run: nix-store -qR $(nix-instantiate  --arg release true . -A rmPkgs.remarkable_news) 
     - run: nix build --arg release true -f . rmPkgs.linuxPackages.mxc_epdc_fb_damage
     - name: "Copy linuxPackages.mxc_epdc_fb_damage"
